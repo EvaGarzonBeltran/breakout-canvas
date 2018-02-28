@@ -28,13 +28,7 @@ window.onload = function () {
     var brickOffsetLeft = 30;
     var bricks = [];
 
-    /* Mete los ladrillos en una matriz */
-    for (c = 0; c < brickColumnCount; c++) {
-        bricks[c] = [];
-        for (r = 0; r < brickRowCount; r++) {
-            bricks[c][r] = { x: 0, y: 0 };
-        }
-    }
+    var score = 0;
 
     _init();
 
@@ -57,6 +51,10 @@ window.onload = function () {
 
         // Oculta el menu de game over
         var game_over_menu = document.getElementById('game-over-menu-container');
+        game_over_menu.style.display = 'none';
+
+        // Oculta el menu de win game
+        var game_over_menu = document.getElementById('win-game-menu-container');
         game_over_menu.style.display = 'none';
 
         // Muestra el area de juego
@@ -84,7 +82,18 @@ window.onload = function () {
         rightPressed = false;
         leftPressed = false;
 
-        intervalo = setInterval(draw, 10);
+        intervalo = setInterval(draw, 15);
+
+        /* Mete los ladrillos en una matriz */
+        for (c = 0; c < brickColumnCount; c++) {
+            bricks[c] = [];
+            for (r = 0; r < brickRowCount; r++) {
+                bricks[c][r] = { x: 0, y: 0, status: 1 };
+            }
+        }
+
+        // Inicializamos el contador
+        score = 0;
     }
 
     /**
@@ -93,15 +102,17 @@ window.onload = function () {
     function drawBricks() {
         for (c = 0; c < brickColumnCount; c++) {
             for (r = 0; r < brickRowCount; r++) {
-                var brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-                var brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
-                bricks[c][r].x = brickX;
-                bricks[c][r].y = brickY;
-                ctx.beginPath();
-                ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = "yellowgreen";
-                ctx.fill();
-                ctx.closePath();
+                if (bricks[c][r].status == 1) {
+                    var brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+                    var brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+                    bricks[c][r].x = brickX;
+                    bricks[c][r].y = brickY;
+                    ctx.beginPath();
+                    ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                    ctx.fillStyle = "#00F700";
+                    ctx.fill();
+                    ctx.closePath();
+                }
             }
         }
     }
@@ -112,7 +123,7 @@ window.onload = function () {
     function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-        ctx.fillStyle = "yellowgreen";
+        ctx.fillStyle = "#00F700";
         ctx.fill();
         ctx.closePath();
     }
@@ -123,7 +134,7 @@ window.onload = function () {
     function drawPaddle() {
         ctx.beginPath();
         ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-        ctx.fillStyle = "yellowgreen";
+        ctx.fillStyle = "#00F700";
         ctx.fill();
         ctx.closePath();
     }
@@ -134,9 +145,11 @@ window.onload = function () {
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        drawPaddle();
-        drawBricks();
-        drawBall();
+        drawPaddle(); // pinta la pala
+        drawScore(); // pinta la puntuacion
+        drawBricks(); // pinta los labdrillos
+        drawBall(); // pinta la bola
+        collisionDetection(); // detecta colisiones
 
         if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) { // Marco derecho y izquierdo
             dx = -dx;
@@ -188,8 +201,44 @@ window.onload = function () {
         }
     }
 
+    /** 
+    * Detecta si la bola está en contacto con algun ladrillo y si es asi,
+    * cambia el estado de este para borrarlo 
+    */
+    function collisionDetection() {
+        for (c = 0; c < brickColumnCount; c++) {
+            for (r = 0; r < brickRowCount; r++) {
+                var b = bricks[c][r];
+                if (b.status == 1) {
+                    if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+                        dy = -dy;
+                        b.status = 0;
+                        score++;
+
+                        if (score == brickRowCount * brickColumnCount) {
+                            _youWin();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /** Pinta el contador de la puntuacion en el canvas */
+    function drawScore() {
+        ctx.font = "16px Monospace";
+        ctx.fillStyle = "#00F700";
+        ctx.fillText("Score: " + score, 8, 20);
+    }
+
+
+    /** INTERFAZ */
+
+    /**
+     * Ir al menu principal
+     */
     function _goToMenu() {
-        // Muestra el menu
+        // Muestra el menu principal
         var game_container = document.getElementById('main-menu');
         game_container.style.display = 'block';
 
@@ -197,7 +246,12 @@ window.onload = function () {
         var game_container = document.getElementById('game-container');
         game_container.style.display = 'none';
 
+        // oculta el menu game over
         var game_over_menu = document.getElementById('game-over-menu-container');
+        game_over_menu.style.display = 'none';
+
+        // oculta el menu win game
+        var game_over_menu = document.getElementById('win-game-menu-container');
         game_over_menu.style.display = 'none';
     }
 
@@ -213,6 +267,20 @@ window.onload = function () {
 
         var restart_button = document.getElementById('restart-button').addEventListener('click', startGame, false);
         var restart_button = document.getElementById('exit-button').addEventListener('click', _goToMenu, false);
+    }
+
+    /** 
+    * Gana el juego
+    */
+    function _youWin() {
+        clearInterval(intervalo);
+        intervalo = undefined;
+
+        var game_over_menu = document.getElementById('win-game-menu-container');
+        game_over_menu.style.display = "block";
+
+        var restart_button = document.getElementById('win-restart-button').addEventListener('click', startGame, false);
+        var restart_button = document.getElementById('win-exit-button').addEventListener('click', _goToMenu, false);
     }
 
 }

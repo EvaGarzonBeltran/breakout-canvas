@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Gamedev Canvas Workshop - lesson 2: move the ball</title>
+    <title>Breakout game by Eva Gabe</title>
     <link rel="stylesheet" type="text/css" href="./css/main.css">
     <script src="./js/main.js"></script>
 </head>
@@ -11,25 +11,29 @@
 <body>
 
     <div id="main-container">
+
+        <!-- menu principal -->
         <div id="main-menu">
             <div id="start-menu">
-                <h1>GAME</h1>
+                <h1>Breakout game by Eva Gabe</h1>
                 <button id="start-button" class="main-button">
                     START
                 </button>
             </div>
         </div>
 
+        <!-- contenedor del juego -->
         <div id="game-container">
             <canvas id="myCanvas" width="600" height="400"></canvas>
         </div>
 
+        <!-- pantalla game over -->
         <div id="game-over-menu-container">
             <div id="game-over-menu">
                 <h1>GAME OVER</h1>
                 <div>
                     <button id="restart-button" class="main-button">
-                        START
+                        RESTART
                     </button>
                     <button id="exit-button" class="main-button">
                         EXIT
@@ -37,6 +41,22 @@
                 </div>
             </div>
         </div>
+
+        <!-- pantalla ganador -->
+        <div id="win-game-menu-container">
+            <div id="win-game-menu">
+                <h1>You win!</h1>
+                <div>
+                    <button id="win-restart-button" class="main-button">
+                        RESTART
+                    </button>
+                    <button id="win-exit-button" class="main-button">
+                        EXIT
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </body>

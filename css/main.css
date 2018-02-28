@@ -1,25 +1,27 @@
 * {
     padding: 0;
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Monospace, Helvetica, sans-serif;
 }
 
 a, a:visited, button.main-button {
     color: #fff !important;
+    font-size: 20px;
+    font-weight: 400;
     text-decoration: none;
-    border: 1px solid yellowgreen;
-    background: yellowgreen;
+    border: 1px solid #00F700;
+    background: #00F700;
     border-radius: 30px;
-    padding: 20px;
+    padding: 15px;
     margin: 10px;
     outline: none;
     cursor: pointer;
 }
 
 .main-button {
-    -moz-box-shadow: 0px 3px 0px 0px rgb(78, 189, 44);
+    /*-moz-box-shadow: 0px 3px 0px 0px rgb(78, 189, 44);
     -webkit-box-shadow: 0px 3px 0px 0px rgb(78, 189, 44);
-    box-shadow: 0px 3px 0px 0px rgb(78, 189, 44);
+    box-shadow: 0px 3px 0px 0px rgb(78, 189, 44);*/
 }
 
 div#main-container {
@@ -56,10 +58,11 @@ canvas {
     margin: 0 auto;
     position: relative;
     top: calc(50% - 200px);
-    border: 1px solid yellowgreen;
+    border: 1px solid #00F700;
+    cursor: none !important;
 }
 
-div#main-container div#game-over-menu-container {
+div#main-container div#game-over-menu-container, div#main-container div#win-game-menu-container {
     background: rgba(0, 0, 0, 0.8);
     color: #fff;
     width: 100%;
@@ -70,7 +73,7 @@ div#main-container div#game-over-menu-container {
     left: 0px;
 }
 
-div#main-container div#game-over-menu-container div#game-over-menu {
+div#main-container div#game-over-menu-container div#game-over-menu, div#main-container div#win-game-menu-container div#win-game-menu {
     width: 40%;
     margin: 0 auto;
     text-align: center;
