@@ -70,8 +70,8 @@ window.onload = function () {
         ctx = canvas.getContext("2d");
         x = canvas.width / 2;
         y = canvas.height - 30;
-        dx = 2;
-        dy = -2;
+        dx = Math.round(Math.random() * (5 - (1)) + 1);
+        dy = - Math.round(Math.random() * (5 - 1) + 1);
 
         ballRadius = 10;
 
@@ -159,13 +159,14 @@ window.onload = function () {
             dy = -dy;
         } else if (y + dy > canvas.height - ballRadius) { // Marco inferior
             if (x > paddleX && x < paddleX + paddleWidth) { // Si choca con la pala
-                dy = -dy;
+                 dy = -dy;
             }
             else { // Si no choca la pala, GAME OVER
                 _gameOver();
             }
         }
 
+        // Movimiento pala
         if (rightPressed && paddleX < canvas.width - paddleWidth) {
             paddleX += 7;
         }
